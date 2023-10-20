@@ -2,6 +2,9 @@ from flask import Flask
 from dotenv import find_dotenv, load_dotenv
 from os import environ as env
 from authlib.integrations.flask_client import OAuth
+import ssl
+
+ssl._create_default_https_context = ssl._create_stdlib_context
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:

@@ -4,6 +4,16 @@ import json
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
 from flask import redirect, render_template, session, url_for
+from authlib.integrations.flask_oauth2 import ResourceProtector
+from flask_app.auth0.validator import Auth0JWTBearerTokenValidator
+
+
+require_auth = ResourceProtector()
+validator = Auth0JWTBearerTokenValidator(
+    "dev-z4dpc0oroey5azx4.us.auth0.com",
+    "https://app/login"
+)
+require_auth.register_token_validator(validator)
 
 
 # Controllers API
@@ -45,3 +55,9 @@ def logout():
             quote_via=quote_plus,
         )
     )
+
+
+@auth0_blueprint.route('/protected', methods=['GET'])
+@require_auth()
+def protected():
+    return {"message": "Protected endpoint"}
